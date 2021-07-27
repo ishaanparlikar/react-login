@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { Card, Form, Button, Container, Alert } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext'
+import { Link, useHistory } from "react-router-dom"
 
 
 const Signup = () => {
@@ -8,10 +9,10 @@ const Signup = () => {
    const mobileRef = useRef()
    const passwordRef = useRef()
    const confirmPasswordRef = useRef()
-   const { signup, currentUser } = useAuth()
+   const { signup } = useAuth()
    const [error, setError] = useState('')
    const [loading, setLoading] = useState(false)
-
+   const history = useHistory()
    async function handleSubmit(e) {
       e.preventDefault();
 
@@ -22,8 +23,9 @@ const Signup = () => {
       try {
          setError('')
          signup(emailRef.current.value, passwordRef.current.value)
+         history.push('/login')
       } catch (error) {
-         setError('Failed to Create Account')
+         setError('Failed to Sign in')
       }
    }
    return (
@@ -32,7 +34,7 @@ const Signup = () => {
             <Card>
                <Card.Body>
                   <h2 className="text-center">Sign Up</h2>
-                  {currentUser && currentUser.email}
+
                   {error && <Alert variant="danger">{error}</Alert>}
                   <Form onSubmit={handleSubmit}>
                      <Form.Group id="email">
@@ -61,7 +63,7 @@ const Signup = () => {
                      </Form.Group>
                      <p className="mt-4">
                         Already Have Account
-                        <a href="#">&nbsp;Log in</a>
+                        <Link to="/login" >&nbsp;Log In</Link>
                      </p>
                      <Button disabled={loading} className="mt-3 text-center w-100 " type="submit">Sign Up</Button>
                   </Form>
